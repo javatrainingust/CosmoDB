@@ -1,0 +1,40 @@
+--------------------------------
+-- Scalr Epression Queries --
+---------------------------------
+-- Basic Expressions 
+SELECT "Hello"
+
+SELECT "Hello" As word
+
+SELECT VALUE "Hello"
+
+SELECT "Hello" , "World"
+
+SELECT
+    "Hello" AS word1,
+    "world" AS word2
+
+
+-- Shaping nested array and embeded objects 
+
+SELECT [ 
+    "Hello",
+    "World"
+] AS words
+
+
+SELECT 
+{
+    "word1": "Hello",
+    "word2": "World"
+}
+AS words
+
+
+SELECT 
+{
+    "word1": ["Hello", "World"],
+    "word2": ["How", "are", "you?"]
+}
+AS manywords
+

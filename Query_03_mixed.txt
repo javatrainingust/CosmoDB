@@ -1,0 +1,89 @@
+-- FROM clause
+
+-- Can juse use 'c' for container
+SELECT * FROM c 
+
+-- Get City and State
+SELECT  
+    c.location.city, 
+    c.location.state FROM c
+
+-- Get type and description , can use container name
+SELECT  
+    employees.type, 
+    employees.description 
+FROM employees
+
+
+-- "Double" - alias
+SELECT  
+    e.type, 
+    e.description 
+FROM employees AS e
+
+
+-- Reduce source to subset of projects
+
+SELECT * FROM c.projects
+
+
+--- with reduced source, can't query outside the subset
+
+SELECT * 
+FROM c.children
+WHERE c.location.state = 'NY';
+
+-- All queryable properties need to be in scope
+SELECT c.parents 
+FROM c
+WHERE c.location.city = 'NY';
+
+--From with in (flatten documents)
+SELECT * FROM ch IN c.Children
+
+SELECT 
+    ch.givenName ?? ch.firstName AS childName,
+    ch.grade,
+    ARRAY_LENGTH(ch.pets) ?? 0 AS numberOfPets,
+    ch.pets 
+FROM
+ch IN c.children
+
+
+--FROM JOIN
+
+-- Duplicate parent-level info for each child
+
+SELECT 
+  f.id,
+  f.location.city,
+  f.location.state,
+  ch.givenName ?? ch.firstName AS childName,
+  ARRAY_LENGTH(ch.pets) ?? 0 AS numberOfPets,
+  ch.pets 
+FROM c AS f
+JOIN ch IN f.children
+
+
+--DOUBLE JOIN TO FLATTEN CHILDREN AND PETS
+SELECT 
+    f.id,
+    ch.givenName ?? ch.firstName AS childName,
+    p.givenName AS petName,
+    p.type
+FROM c AS f
+JOIN ch IN f.children
+JOIN p IN ch.pets 
+
+-- Flatten to string array of pet names using VALUE
+
+SELECT p.givenName
+FROM c AS f
+JOIN ch IN f.children
+JOIN p IN ch.pets
+
+
+SELECT VALUE p.givenName
+FROM c AS f
+JOIN ch IN f.children
+JOIN p IN ch.pets
